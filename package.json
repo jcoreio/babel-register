@@ -1,0 +1,47 @@
+{
+  "name": "babel-register-files-cache",
+  "description": "babel-register fork that caches transformed files separately on disk instead of using a monolithic json file",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jcoreio/babel-register-files-cache.git"
+  },
+  "homepage": "https://github.com/jcoreio/babel-register-files-cache",
+  "bugs": {
+    "url": "https://github.com/jcoreio/babel-register-files-cache/issues"
+  },
+  "author": "Andy Edwards",
+  "license": "MIT",
+  "keywords": [
+    ""
+  ],
+  "devDependencies": {
+    "@jcoreio/toolchain": "5.4.3",
+    "@jcoreio/toolchain-circle": "^5.4.3",
+    "@jcoreio/toolchain-esnext": "^5.4.3",
+    "@jcoreio/toolchain-semantic-release": "^5.4.3",
+    "@jcoreio/toolchain-typescript": "^5.4.3",
+    "eslint": "^9.17.0",
+    "globals": "^16.0.0",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.4.2",
+    "typescript": "^5.1.0"
+  },
+  "version": "0.0.0-development",
+  "sideEffects": false,
+  "scripts": {
+    "tc": "toolchain",
+    "toolchain": "toolchain",
+    "test": "toolchain test",
+    "prepublishOnly": "echo This package is meant to be published by semantic-release from the dist build directory. && exit 1"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "packageManager": "pnpm@10.6.5",
+  "dependencies": {
+    "@babel/runtime": "^7.26.0"
+  },
+  "@jcoreio/toolchain": {
+    "migratedVersion": "5.4.3"
+  }
+}
