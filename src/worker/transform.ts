@@ -17,7 +17,7 @@ function escapeRegExp(string: string) {
   return string.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
 }
 
-let cacheKey: string = 'default'
+let cacheKey: string = process.env.NODE_ENV || 'development'
 let cacheDir: string | undefined
 let projectDir: string | undefined
 let transformOpts: babel.TransformOptions
