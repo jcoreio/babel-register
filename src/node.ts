@@ -4,9 +4,9 @@
 
 import * as hook from './hook'
 import { Options } from './types'
-import { LocalClient } from './worker-client'
+import { WorkerClient } from './worker-client'
 
-const client = new LocalClient()
+const client = new WorkerClient()
 export default function register(opts: Options = {}) {
   return hook.register(client, { ...opts })
 }

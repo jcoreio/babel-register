@@ -70,7 +70,7 @@ export function setOptions(opts: babel.TransformOptions & Options) {
 }
 
 export async function transform(input: string, filename: string) {
-  const { cached, store } = cacheLookup(filename)
+  const { cached, store } = await cacheLookup(filename)
   if (cached) return cached
 
   // @ts-expect-error not in type defs
@@ -94,11 +94,15 @@ export async function transform(input: string, filename: string) {
   const { code, map } = transformed
   if (!code) throw new Error('missing code from transformed')
 
-  return store({ code, map })
+  store({ code, map }).catch((error: unknown) => {
+    // eslint-disable-next-line no-console
+    console.error(error)
+  })
+  return { code, map }
 }
 
 export function transformSync(input: string, filename: string) {
-  const { cached, store } = cacheLookup(filename)
+  const { cached, store } = cacheLookupSync(filename)
   if (cached) return cached
 
   // @ts-expect-error not in type defs
@@ -127,7 +131,45 @@ export function transformSync(input: string, filename: string) {
 
 const id = (value: unknown) => value
 
-function cacheLookup(filename: string) {
+async function cacheLookup(filename: string) {
+  const relPath = projectDir ? path.relative(projectDir, filename) : undefined
+  if (!relPath || !cacheDir || relPath.startsWith('.'))
+    return { cached: null, store: async (v: unknown) => v }
+
+  const cachePath = path.join(cacheDir, relPath)
+
+  const store = async (result: babel.BabelFileResult) => {
+    const { code, map } = result
+    if (code || map) {
+      await fs.mkdirs(path.dirname(cachePath))
+    }
+    await Promise.all([
+      code != null && fs.writeFile(cachePath, code, 'utf8'),
+      map && fs.writeJson(`${cachePath}.map`, map),
+    ])
+  }
+
+  try {
+    const [{ mtime: cacheMtime }, { mtime: fileMtime }] = await Promise.all([
+      fs.stat(cachePath),
+      fs.stat(filename),
+    ])
+
+    if (cacheMtime >= fileMtime) {
+      const [code, map] = await Promise.all([
+        fs.readFile(cachePath, 'utf8'),
+        fs.readJson(`${cachePath}.map`),
+      ])
+      return { cached: { code, map }, store }
+    }
+  } catch {
+    // ignore
+  }
+
+  return { cached: null, store }
+}
+
+function cacheLookupSync(filename: string) {
   const relPath = projectDir ? path.relative(projectDir, filename) : undefined
   if (!relPath || !cacheDir || relPath.startsWith('.'))
     return { cached: null, store: id }

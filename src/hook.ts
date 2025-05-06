@@ -58,6 +58,7 @@ function compileBabel7(client: IClient, code: string, filename: string) {
 }
 
 function compile(client: IClient, inputCode: string, filename: string) {
+  if (/\/node_modules\//.test(filename)) return inputCode
   const result = client.transform(inputCode, filename)
 
   if (result === null) return inputCode
