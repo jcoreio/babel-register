@@ -3,11 +3,11 @@
   "description": "babel-register fork that caches transformed files separately on disk instead of using a monolithic json file",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jcoreio/babel-register-files-cache.git"
+    "url": "https://github.com/jcoreio/babel-register.git"
   },
-  "homepage": "https://github.com/jcoreio/babel-register-files-cache",
+  "homepage": "https://github.com/jcoreio/babel-register",
   "bugs": {
-    "url": "https://github.com/jcoreio/babel-register-files-cache/issues"
+    "url": "https://github.com/jcoreio/babel-register/issues"
   },
   "main": "./dist/index.js",
   "author": "Andy Edwards",
