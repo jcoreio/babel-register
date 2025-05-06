@@ -1,0 +1,5 @@
+{
+  "astx.babelGeneratorHack": true,
+  "astx.preferSimpleReplacement": true,
+  "astx.prettier": false
+}
