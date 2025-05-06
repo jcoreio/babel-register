@@ -61,7 +61,7 @@ function compile(client: IClient, inputCode: string, filename: string) {
   if (/\/node_modules\//.test(filename)) return inputCode
   const result = client.transform(inputCode, filename)
 
-  if (result === null) return inputCode
+  if (result == null) return inputCode
 
   const { code, map } = result
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
