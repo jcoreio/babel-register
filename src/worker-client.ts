@@ -53,23 +53,25 @@ export class WorkerClient extends Client {
     { env: WorkerClient.#markInRegisterWorker(process.env) }
   )
 
-  #signal = new Int32Array(new SharedArrayBuffer(4))
-
   constructor() {
     super((action, payload) => {
-      this.#signal[0] = 0
       const subChannel = new WorkerClient.#worker_threads.MessageChannel()
 
+      const signal = new Int32Array(new SharedArrayBuffer(4))
+      signal[0] = 0
       this.#worker.postMessage(
-        { signal: this.#signal, port: subChannel.port1, action, payload },
+        { signal, port: subChannel.port1, action, payload },
         [subChannel.port1]
       )
 
-      Atomics.wait(this.#signal, 0, 0)
+      Atomics.wait(signal, 0, 0)
       const received = WorkerClient.#worker_threads.receiveMessageOnPort(
         subChannel.port2
       )
-      const message = received?.message
+      if (!received) {
+        throw new Error('failed to get message from worker')
+      }
+      const message = received.message
 
       if (message?.error) throw Object.assign(message.error, message.errorData)
       else return message?.result
