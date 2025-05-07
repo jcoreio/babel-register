@@ -92,7 +92,7 @@ export async function transform(input: string, filename: string) {
   if (!transformed) throw new Error('transform result is not defined')
 
   const { code, map } = transformed
-  if (!code) throw new Error('missing code from transformed')
+  if (code == null) throw new Error('missing code from transformed')
 
   store({ code, map }).catch((error: unknown) => {
     // eslint-disable-next-line no-console
@@ -124,7 +124,7 @@ export function transformSync(input: string, filename: string) {
   if (!transformed) throw new Error('transform result is not defined')
 
   const { code, map } = transformed
-  if (!code) throw new Error('missing code from transformed')
+  if (code == null) throw new Error('missing code from transformed')
 
   return store({ code, map })
 }
